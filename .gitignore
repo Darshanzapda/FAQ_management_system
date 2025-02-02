@@ -1,0 +1,24 @@
+# Ignore static files (can be regenerated)
+staticfiles/
+static/
+media/
+
+# Ignore Django migrations (optional)
+**/migrations/*
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pytest_cache/
+
+# Ignore system files
+.DS_Store
+*.log
+.env
+.venv/
+venv/
+
+# Ignore SQLite database
+db.sqlite3
+*.sqlite3

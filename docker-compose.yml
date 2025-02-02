@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    command: gunicorn faq_project.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app:z
+      - ./staticfiles:/app/staticfiles  # Ensure static files are mapped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - DJANGO_SETTINGS_MODULE=faq_project.settings
+
+  redis:
+    image: redis:alpine
+    restart: always
