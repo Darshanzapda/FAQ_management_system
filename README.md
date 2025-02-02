@@ -25,7 +25,9 @@ Ensure you have the following installed on your system:
 
 ### **Step 1: Clone the Repository**
 ```sh
-git clone https://github.com/your-username/FAQ_management_system.git
+git clone https://github.com/DarshanZapda/FAQ_management_system.git
+```
+```
 cd FAQ_management_system
 ```
 
@@ -106,7 +108,12 @@ docker-compose up --build -d
 docker exec -it faq_management_system-web-1 python manage.py migrate
 ```
 
-### **Step 3: Run Server in Docker**
+### **Step 3: Create a Superuser in Docker**
+```sh
+docker exec -it faq_management_system-web-1 python manage.py createsuperuser
+```
+
+### **Step 4: Run Server in Docker**
 ```sh
 docker exec -it faq_management_system-web-1 python manage.py runserver 0.0.0.0:8000
 ```
