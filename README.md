@@ -1,161 +1,172 @@
 # FAQ Management System
 
-## Introduction
-The **FAQ Management System** is a Django-based backend service that allows users to store and retrieve Frequently Asked Questions (FAQs) with multi-language support. It supports dynamic translation using Google Translate API and provides an efficient caching mechanism using Redis. The system also includes an admin panel for managing FAQs and follows best coding practices with PEP8 compliance and unit testing.
+## Overview
+The **FAQ Management System** is a Django-based web application that allows users to manage frequently asked questions with multi-language support. The system provides a **REST API**, WYSIWYG editor integration, caching using Redis, and follows PEP8 coding standards.
 
 ## Features
-- **Django Models**: Store FAQs with WYSIWYG editor support
-- **Multi-Language Support**: Automated translations using Google Translate API
-- **REST API**: Fetch FAQs in different languages via query parameters
-- **Caching**: Uses Redis to improve performance
-- **Admin Panel**: Manage FAQs with an intuitive UI
-- **Code Quality**: Follows PEP8 standards and linting with `flake8`
-- **Unit Testing**: Implements `pytest` to validate API responses and models
-- **Docker Support**: Run the application in an isolated container environment
+- **Django Models**: Supports multilingual FAQs with dynamic translations.
+- **WYSIWYG Editor**: Uses `django-ckeditor` for rich text formatting.
+- **REST API**: Provides endpoints to retrieve FAQs with language selection.
+- **Caching Mechanism**: Implements Redis for optimized performance.
+- **Admin Panel**: Allows easy management of FAQs through Django Admin.
+- **Unit Tests**: Uses `pytest` for testing model methods and API responses.
+- **Docker Support**: Fully containerized setup using `Docker` and `docker-compose`.
 
 ---
-## Installation Guide
+## Installation
+### Method 1: Running Locally Without Docker
+> **Note:** If running locally, you can remove `Dockerfile` and `docker-compose.yml`.
 
-### **Prerequisites**
-Ensure you have the following installed on your system:
-- Python 3.8+
-- Django 4+
-- Redis Server
-- Docker & Docker Compose (for containerized deployment)
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Darshanzapda/FAQ_management_system.git
+   cd FAQ_management_system
+   ```
 
-### **Step 1: Clone the Repository**
-```sh
-git clone https://github.com/DarshanZapda/FAQ_management_system.git
-```
-```
-cd FAQ_management_system
-```
+2. **Create and activate a virtual environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Mac/Linux
+   .\venv\Scripts\activate  # On Windows
+   ```
 
-### **Step 2: Set Up a Virtual Environment**
-```sh
-python -m venv venv
-```
-Activate the virtual environment:
-- **Windows**:
-  ```sh
-  .\venv\Scripts\activate
-  ```
-- **Mac/Linux**:
-  ```sh
-  source venv/bin/activate
-  ```
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### **Step 3: Install Dependencies**
-```sh
-pip install -r requirements.txt
-```
+4. **Run database migrations**:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
 
-### **Step 4: Configure Environment Variables**
-Set the `DJANGO_SETTINGS_MODULE`:
-```sh
-set DJANGO_SETTINGS_MODULE=FAQ_management_system.settings
-```
+5. **Start Redis server** (for caching support):
+   ```bash
+   redis-server
+   ```
+   Verify Redis is running:
+   ```bash
+   redis-cli ping  # Should return PONG
+   ```
 
-### **Step 5: Apply Migrations**
-```sh
-python manage.py makemigrations
-python manage.py migrate
-```
+6. **Create a superuser** (for Django Admin Panel):
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-### **Step 6: Start Redis Server**
-```sh
-redis-server
-```
-Verify Redis is working:
-```sh
-redis-cli ping  # Should return 'PONG'
-```
+7. **Run the Django development server**:
+   ```bash
+   python manage.py runserver
+   ```
+   Access the app:
+   - Admin Panel: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+   - API Endpoint: [http://127.0.0.1:8000/api/faqs/](http://127.0.0.1:8000/api/faqs/)
 
-### **Step 7: Run the Development Server**
-```sh
-python manage.py runserver
-```
-Admin panel available at: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+---
+
+### Method 2: Running Using Docker
+> **Note:** Ensure you have **Docker** and **Docker Compose** installed.
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Darshanzapda/FAQ_management_system.git
+   cd FAQ_management_system
+   ```
+
+2. **Build and run the containers**:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. **Create a superuser inside the running container**:
+   ```bash
+   docker exec -it faq_management_system-web-1 python manage.py createsuperuser
+   ```
+
+4. **Access the application**:
+   - Admin Panel: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+   - API Endpoint: [http://127.0.0.1:8000/api/faqs/](http://127.0.0.1:8000/api/faqs/)
 
 ---
 ## API Usage
-
-### **Retrieve FAQs (Default - English)**
-```sh
-GET http://127.0.0.1:8000/api/faqs/
-```
-
-### **Retrieve FAQs in Hindi**
-```sh
-GET http://127.0.0.1:8000/api/faqs/?lang=hi
-```
-
-### **Retrieve FAQs in Bengali**
-```sh
-GET http://127.0.0.1:8000/api/faqs/?lang=bn
-```
+### Fetch FAQs in Different Languages
+- **Default (English):**
+  ```bash
+  curl http://127.0.0.1:8000/api/faqs/
+  ```
+- **Hindi:**
+  ```bash
+  curl http://127.0.0.1:8000/api/faqs/?lang=hi
+  ```
+- **Bengali:**
+  ```bash
+  curl http://127.0.0.1:8000/api/faqs/?lang=bn
+  ```
 
 ---
-## Running the Application with Docker
-
-### **Step 1: Build and Start Containers**
-```sh
-docker-compose up --build -d
-```
-
-### **Step 2: Run Migrations in Docker**
-```sh
-docker exec -it faq_management_system-web-1 python manage.py migrate
-```
-
-### **Step 3: Create a Superuser in Docker**
-```sh
-docker exec -it faq_management_system-web-1 python manage.py createsuperuser
-```
-
-### **Step 4: Run Server in Docker**
-```sh
-docker exec -it faq_management_system-web-1 python manage.py runserver 0.0.0.0:8000
-```
+## Code Quality & Linting
+- Follow **PEP8** guidelines.
+- Use `flake8` for linting:
+  ```bash
+  docker exec -it faq_management_system-web-1 bash
+  flake8 .
+  ```
 
 ---
-## Code Quality & Testing
+## Running Unit Tests
+- Uses `pytest` for testing model methods and API responses.
+- Run tests inside the Docker container:
+  ```bash
+  docker exec -it faq_management_system-web-1 pytest
+  ```
 
-### **Linting with flake8**
-```sh
-docker exec -it faq_management_system-web-1 flake8 .
-```
-
-### **Running Unit Tests with pytest**
-```sh
-docker exec -it faq_management_system-web-1 pytest
+---
+## Database Reset (Optional)
+To delete all users and reset the database:
+```bash
+python manage.py flush
 ```
 
 ---
 ## Contribution Guidelines
-1. **Fork the Repository**
-2. **Create a New Branch**
-   ```sh
-   git checkout -b feature-branch-name
-   ```
-3. **Make Your Changes and Commit**
-   ```sh
-   git add .
-   git commit -m "feat: Add new translation support"
-   ```
-4. **Push to GitHub and Create a Pull Request**
-   ```sh
-   git push origin feature-branch-name
-   ```
+### Commit Messages Format
+Follow conventional commits:
+- **feat:** Add new feature
+- **fix:** Fix a bug
+- **docs:** Update documentation
+- **test:** Add or update tests
 
+Example:
+```bash
+feat: Add multilingual FAQ model
+fix: Improve translation caching
+```
+
+### How to Contribute
+1. **Fork the repository**.
+2. **Clone your fork**:
+   ```bash
+   git clone https://github.com/your-username/FAQ_management_system.git
+   ```
+3. **Create a feature branch**:
+   ```bash
+   git checkout -b feature-new-functionality
+   ```
+4. **Make changes and commit**:
+   ```bash
+   git commit -m "feat: Add new translation feature"
+   ```
+5. **Push to GitHub and create a pull request**.
+   ```bash
+   git push origin feature-new-functionality
+   ```
+6. **Create a pull request:**.
+   - Go to your forked repository on GitHub.
+   - Click on "Compare & pull request".
+   - Add a descriptive title and comments.
+   - Click "Create pull request".
+   
 ---
-## Git Commit Message Format
-Follow conventional commit messages:
-- `feat: Add multilingual FAQ model`
-- `fix: Improve translation caching`
-- `docs: Update README with API examples`
 
----
-
-🚀 **Happy Coding!**
-
+## Happy Coding! 🚀
